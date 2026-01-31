@@ -27,16 +27,8 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: url('images.jpg') no-repeat center center; 
             background-size: cover; z-index: 100; 
-            cursor: pointer;
             display: flex; justify-content: center; align-items: flex-end;
             padding-bottom: 50px;
-        }
-
-        #flash-image::after {
-            content: 'CLICK TO START';
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
         }
 
         video { 
@@ -74,9 +66,9 @@
 </head>
 <body>
 
-    <div id="flash-image" onclick="startContent()"></div>
+    <div id="flash-image"></div>
 
-    <video id="video1" playsinline>
+    <video id="video1" playsinline muted>
         <source src="naging%20kayo%20ba_%20hmm__.mp4" type="video/mp4">
     </video>
 
@@ -104,14 +96,19 @@
         const startTime = 98; 
         const endTime = 123; 
 
-        function startContent() {
-            flash.style.display = 'none';
-            v1.classList.add('active-video');
-            v1.play().catch(e => {
-                console.error("Autoplay blocked", e);
-                over1.style.display = 'flex';
-            });
-        }
+        // Wait 0.3 seconds then try to autoplay
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                flash.style.display = 'none';
+                v1.classList.add('active-video');
+                
+                // Note: v1 is MUTED so this works automatically
+                v1.play().catch(e => {
+                    console.log("Autoplay blocked, showing button instead.");
+                    over1.style.display = 'flex';
+                });
+            }, 300); // 0.3 seconds
+        });
 
         v1.onended = () => {
             over1.style.display = 'flex';
@@ -121,6 +118,8 @@
             over1.style.display = 'none';
             v1.classList.remove('active-video');
             v1.pause();
+            
+            // v2 will play with sound because it's triggered by a button click
             v2.classList.add('active-video');
             v2.currentTime = startTime;
             v2.play();
