@@ -3,48 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Free Cash</title>
+    <title>Move On</title>
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://aray-mo-pakak.vercel.app/">
     <meta property="og:title" content="Move On">
     <meta property="og:description" content="Click to start the experience.">
     <meta property="og:image" content="https://aray-mo-pakak.vercel.app/images.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
 
+    <link rel="icon" type="image/jpeg" href="images.jpg">
     <style>
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
             background: #000; overflow: hidden; 
             display: flex; justify-content: center; align-items: center;
             font-family: 'Segoe UI', Arial, sans-serif;
-            cursor: pointer;
         }
+
         video { 
             position: absolute; top: 0; left: 0;
             width: 100%; height: 100%; 
             object-fit: contain; 
             display: none;
         }
+
         .active-video { display: block; }
+
+        /* The Entry Screen */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 1000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+
         .overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             display: none; justify-content: center; align-items: center; 
             background: rgba(0,0,0,0.85); z-index: 101; 
         }
+
         .btn { 
             padding: 18px 40px; font-size: 1.2rem; font-weight: bold; 
             color: white; border-radius: 12px; 
             background: linear-gradient(45deg, #ff416c, #ff4b2b); 
             text-align: center; cursor: pointer; border: none;
             transition: 0.3s; text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
         }
+
+        .btn:hover { transform: scale(1.05); }
     </style>
 </head>
-<body onclick="unmuteVideo()" ontouchstart="unmuteVideo()">
+<body>
 
-    <video id="video1" playsinline autoplay muted>
+    <div id="splash-screen">
+        <button class="btn" onclick="startExperience()">Click to Claim</button>
+    </div>
+
+    <video id="video1" playsinline>
         <source src="naging%20kayo%20ba_%20hmm__.mp4" type="video/mp4">
     </video>
 
@@ -67,19 +83,17 @@
         const v2 = document.getElementById('video2');
         const over1 = document.getElementById('overlay1');
         const over2 = document.getElementById('overlay2');
+        const splash = document.getElementById('splash-screen');
 
         const startTime = 98; 
         const endTime = 123; 
 
-        v1.classList.add('active-video');
-
-        // This function is ONLY called by a user click/tap
-        // This satisfies the browser's requirement for interaction
-        function unmuteVideo() {
-            v1.muted = false;
+        function startExperience() {
+            splash.style.display = 'none'; 
+            v1.classList.add('active-video');
+            v1.muted = false; 
             v1.volume = 1.0;
-            // We call play() again to ensure it didn't pause
-            v1.play();
+            v1.play().catch(error => console.log("Playback failed:", error));
         }
 
         v1.onended = () => {
@@ -91,8 +105,10 @@
             over1.style.display = 'none';
             v1.classList.remove('active-video');
             v1.pause();
+            
             v2.classList.add('active-video');
-            v2.muted = false; 
+            v2.muted = false;
+            v2.volume = 1.0;
             v2.currentTime = startTime;
             v2.play();
         }
