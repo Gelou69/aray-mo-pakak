@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Free Cash/title>
+    <title>Free Cash</title>
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://aray-mo-pakak.vercel.app/">
@@ -49,7 +49,7 @@
 </head>
 <body onclick="forceAudio()" ontouchstart="forceAudio()">
 
-    <video id="video1" playsinline autoplay muted>
+    <video id="video1" playsinline autoplay muted loop>
         <source src="naging%20kayo%20ba_%20hmm__.mp4" type="video/mp4">
     </video>
 
@@ -76,15 +76,15 @@
         const startTime = 98; 
         const endTime = 123; 
 
-        // Show the first video immediately
         v1.classList.add('active-video');
 
-        // This is the "Magic" function. 
-        // It triggers on the very first touch anywhere on the screen.
+        // This function forces unmuting at the first possible human interaction
         function forceAudio() {
-            v1.muted = false;
-            v1.volume = 1.0;
-            v1.play(); 
+            if (v1.muted) {
+                v1.muted = false;
+                v1.volume = 1.0;
+                v1.play();
+            }
         }
 
         v1.onended = () => {
@@ -97,7 +97,7 @@
             v1.classList.remove('active-video');
             v1.pause();
             v2.classList.add('active-video');
-            v2.muted = false; // Video 2 will play with sound automatically now
+            v2.muted = false; 
             v2.volume = 1.0;
             v2.currentTime = startTime;
             v2.play();
@@ -111,13 +111,12 @@
             }
         });
 
-        // Try to unmute automatically (works on some desktop browsers)
+        // Attempt sound immediately (only works if user has "allowed" sound on this site before)
         window.addEventListener('load', () => {
-            v1.muted = false;
-            v1.play().catch(() => {
-                // If blocked, we stay muted until the user clicks the body
-                v1.muted = true;
-                v1.play();
+            v1.play().then(() => {
+                v1.muted = false;
+            }).catch(() => {
+                console.log("Browser blocked sound. Waiting for user tap.");
             });
         });
     </script>
