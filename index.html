@@ -13,7 +13,6 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
 
-    <link rel="icon" type="image/jpeg" href="images.jpg">
     <style>
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
@@ -22,22 +21,18 @@
             font-family: 'Segoe UI', Arial, sans-serif;
             cursor: pointer;
         }
-
         video { 
             position: absolute; top: 0; left: 0;
             width: 100%; height: 100%; 
             object-fit: contain; 
             display: none;
         }
-
         .active-video { display: block; }
-
         .overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             display: none; justify-content: center; align-items: center; 
             background: rgba(0,0,0,0.85); z-index: 101; 
         }
-
         .btn { 
             padding: 18px 40px; font-size: 1.2rem; font-weight: bold; 
             color: white; border-radius: 12px; 
@@ -47,9 +42,9 @@
         }
     </style>
 </head>
-<body onclick="forceAudio()" ontouchstart="forceAudio()">
+<body onclick="unmuteVideo()" ontouchstart="unmuteVideo()">
 
-    <video id="video1" playsinline autoplay muted loop>
+    <video id="video1" playsinline autoplay muted>
         <source src="naging%20kayo%20ba_%20hmm__.mp4" type="video/mp4">
     </video>
 
@@ -78,13 +73,13 @@
 
         v1.classList.add('active-video');
 
-        // This function forces unmuting at the first possible human interaction
-        function forceAudio() {
-            if (v1.muted) {
-                v1.muted = false;
-                v1.volume = 1.0;
-                v1.play();
-            }
+        // This function is ONLY called by a user click/tap
+        // This satisfies the browser's requirement for interaction
+        function unmuteVideo() {
+            v1.muted = false;
+            v1.volume = 1.0;
+            // We call play() again to ensure it didn't pause
+            v1.play();
         }
 
         v1.onended = () => {
@@ -98,7 +93,6 @@
             v1.pause();
             v2.classList.add('active-video');
             v2.muted = false; 
-            v2.volume = 1.0;
             v2.currentTime = startTime;
             v2.play();
         }
@@ -109,15 +103,6 @@
                 v2.currentTime = startTime;
                 v2.play();
             }
-        });
-
-        // Attempt sound immediately (only works if user has "allowed" sound on this site before)
-        window.addEventListener('load', () => {
-            v1.play().then(() => {
-                v1.muted = false;
-            }).catch(() => {
-                console.log("Browser blocked sound. Waiting for user tap.");
-            });
         });
     </script>
 </body>
