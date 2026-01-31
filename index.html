@@ -20,15 +20,7 @@
             background: #000; overflow: hidden; 
             display: flex; justify-content: center; align-items: center;
             font-family: 'Segoe UI', Arial, sans-serif;
-            color: white;
-        }
-        
-        #flash-image { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: url('images.jpg') no-repeat center center; 
-            background-size: cover; z-index: 100; 
-            display: flex; justify-content: center; align-items: flex-end;
-            padding-bottom: 50px;
+            cursor: pointer;
         }
 
         video { 
@@ -52,23 +44,12 @@
             background: linear-gradient(45deg, #ff416c, #ff4b2b); 
             text-align: center; cursor: pointer; border: none;
             transition: 0.3s; text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
         }
-
-        #finalBtn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid white;
-            backdrop-filter: blur(10px);
-        }
-
-        .btn:hover { transform: scale(1.05); }
     </style>
 </head>
-<body>
+<body onclick="forceAudio()" ontouchstart="forceAudio()">
 
-    <div id="flash-image"></div>
-
-    <video id="video1" playsinline muted>
+    <video id="video1" playsinline autoplay muted>
         <source src="naging%20kayo%20ba_%20hmm__.mp4" type="video/mp4">
     </video>
 
@@ -77,11 +58,11 @@
     </video>
 
     <div id="overlay1" class="overlay">
-        <button class="btn" onclick="startSecondPhase()">Move on Na</button>
+        <button class="btn" onclick="nextVideo(event)">Move on Na</button>
     </div>
 
     <div id="overlay2" class="overlay" style="background: transparent;">
-        <button id="finalBtn" class="btn" onclick="location.reload()">
+        <button class="btn" onclick="location.reload()" style="background: rgba(255,255,255,0.1); border: 2px solid white; backdrop-filter: blur(10px);">
             Kung ako nalang diay? HAHA
         </button>
     </div>
@@ -89,38 +70,35 @@
     <script>
         const v1 = document.getElementById('video1');
         const v2 = document.getElementById('video2');
-        const flash = document.getElementById('flash-image');
         const over1 = document.getElementById('overlay1');
         const over2 = document.getElementById('overlay2');
 
         const startTime = 98; 
         const endTime = 123; 
 
-        // Wait 0.3 seconds then try to autoplay
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                flash.style.display = 'none';
-                v1.classList.add('active-video');
-                
-                // Note: v1 is MUTED so this works automatically
-                v1.play().catch(e => {
-                    console.log("Autoplay blocked, showing button instead.");
-                    over1.style.display = 'flex';
-                });
-            }, 300); // 0.3 seconds
-        });
+        // Show the first video immediately
+        v1.classList.add('active-video');
+
+        // This is the "Magic" function. 
+        // It triggers on the very first touch anywhere on the screen.
+        function forceAudio() {
+            v1.muted = false;
+            v1.volume = 1.0;
+            v1.play(); 
+        }
 
         v1.onended = () => {
             over1.style.display = 'flex';
         };
 
-        function startSecondPhase() {
+        function nextVideo(e) {
+            e.stopPropagation(); 
             over1.style.display = 'none';
             v1.classList.remove('active-video');
             v1.pause();
-            
-            // v2 will play with sound because it's triggered by a button click
             v2.classList.add('active-video');
+            v2.muted = false; // Video 2 will play with sound automatically now
+            v2.volume = 1.0;
             v2.currentTime = startTime;
             v2.play();
         }
@@ -131,6 +109,16 @@
                 v2.currentTime = startTime;
                 v2.play();
             }
+        });
+
+        // Try to unmute automatically (works on some desktop browsers)
+        window.addEventListener('load', () => {
+            v1.muted = false;
+            v1.play().catch(() => {
+                // If blocked, we stay muted until the user clicks the body
+                v1.muted = true;
+                v1.play();
+            });
         });
     </script>
 </body>
