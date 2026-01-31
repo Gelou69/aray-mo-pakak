@@ -3,25 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
     <title>Move On</title>
-    <meta name="title" content="Move On">
-    <meta name="description" content="hi guys easy money click lang image">
-
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://aray-mo-pakak.vercel.app/">
-    <meta property="og:title" content="Move On">
-    <meta property="og:description" content="hi guys easy money click lang image">
-    <meta property="og:image" content="https://aray-mo-pakak.vercel.app/images.jpg">
-
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://aray-mo-pakak.vercel.app/">
-    <meta property="twitter:title" content="Move On">
-    <meta property="twitter:description" content="hi guys easy money click lang image">
-    <meta property="twitter:image" content="https://aray-mo-pakak.vercel.app/images.jpg">
-
     <link rel="icon" type="image/jpeg" href="images.jpg">
-    
     <style>
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
@@ -117,6 +100,7 @@
             v1.classList.add('active-video');
             v1.play().catch(e => {
                 console.error("Autoplay blocked", e);
+                // Fallback: if it blocks, show the first button immediately
                 over1.style.display = 'flex';
             });
         }
