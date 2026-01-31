@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Move On</title>
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aray-mo-pakak.vercel.app/">
+    <meta property="og:title" content="Move On">
+    <meta property="og:description" content="Click to start the experience.">
+    <meta property="og:image" content="https://aray-mo-pakak.vercel.app/images.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
     <link rel="icon" type="image/jpeg" href="images.jpg">
     <style>
         body, html { 
@@ -100,7 +109,6 @@
             v1.classList.add('active-video');
             v1.play().catch(e => {
                 console.error("Autoplay blocked", e);
-                // Fallback: if it blocks, show the first button immediately
                 over1.style.display = 'flex';
             });
         }
